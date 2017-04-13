@@ -48,7 +48,7 @@ public class MainActivity extends FragmentActivity implements OnConnectionFailed
     private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 102;
     private static final String DIALOG_ERROR_TAG = "dialogError";
     private static final String STATE_RESOLVING_TAG = "resolvingError";
-    private static final LatLng DELHI_LATLNG = new LatLng(28.7041, 77.1025);
+    private static final LatLng DELHI_LATLNG = new LatLng(28.613924, 77.209003);
     private boolean resolvingError = false;
     private GoogleApiClient placesGoogleApiClient;
     private PlaceAutocompleteFragment placeAutocompleteFragment;
@@ -72,7 +72,7 @@ public class MainActivity extends FragmentActivity implements OnConnectionFailed
             public void onPlaceSelected(Place place)
             {
 
-                Log.d("onPlaceSelected","Place" + place.getName());
+                //Log.d("onPlaceSelected: ","Place" + place.getName());
                 //TODO get place details
                 curSelectedPlace = place;
 
@@ -93,24 +93,24 @@ public class MainActivity extends FragmentActivity implements OnConnectionFailed
                 else
                     placeName.setText(" ");
                 //MAP
-                SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
+                MapFragment mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.map);
                 mapFragment.getMapAsync(new OnMapReadyCallback() {
                     @Override
                     public void onMapReady(GoogleMap googleMap) {
-                        Log.d("Map","Hi map");
                         map = googleMap;
+                        googleMap.clear();
                         LatLng curPlace = curSelectedPlace.getLatLng();
                         if(curPlace!=null)
                         {
-                            Log.d("Holaaaa","Hii");
                             googleMap.addMarker(new MarkerOptions().position(curPlace).title(curSelectedPlace.getName().toString()));
                             googleMap.moveCamera(CameraUpdateFactory.newLatLng(curPlace));
+                            googleMap.animateCamera(CameraUpdateFactory.zoomTo(15.0f));
                         }
                         else
                         {
-                            Log.d("location","no lat lng specified");
                             googleMap.addMarker(new MarkerOptions().position(DELHI_LATLNG).title("Delhi"));
                             googleMap.moveCamera(CameraUpdateFactory.newLatLng(DELHI_LATLNG));
+                            googleMap.animateCamera(CameraUpdateFactory.zoomTo(10.0f));
                         }
                     }
                 });
@@ -142,7 +142,7 @@ public class MainActivity extends FragmentActivity implements OnConnectionFailed
             public void onError(Status status)
             {
                 //TODO Handle the error
-                Log.d("onPlaceSelected","An error occurred: " + status);
+                //Log.d("onPlaceSelected","An error occurred: " + status);
             }
         });
 
